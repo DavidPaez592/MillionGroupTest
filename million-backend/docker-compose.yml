@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: million-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+    volumes:
+      - ./mongo-data:/data/db
+      - ./seed:/docker-entrypoint-initdb.d
+
+  api:
+    build:
+      context: .
+      dockerfile: ./src/Million.Api/Dockerfile
+    container_name: million-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Mongo__ConnectionString=mongodb://million:millionpw@mongo:27017/?authSource=million
+      - Mongo__Database=million
+    ports:
+      - "5084:8080"
+    depends_on:
+      - mongo
+
+volumes:
+  mongo-data:
+    driver: local

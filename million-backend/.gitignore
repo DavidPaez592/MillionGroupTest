@@ -1,0 +1,11 @@
+# Ignore build outputs and user/system files
+bin/
+obj/
+*.user
+*.suo
+*.log
+**/*.log
+.vscode/
+.idea/
+.DS_Store
+.env*

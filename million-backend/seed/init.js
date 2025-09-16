@@ -1,0 +1,290 @@
+// Seed de base de datos para Million (MongoDB)
+// Este script se ejecuta automáticamente al iniciar el contenedor
+// Crea la base de datos, usuario de aplicación, colecciones e inserta datos de muestra
+
+// Seleccionar DB de trabajo
+db = db.getSiblingDB('million');
+
+// Crear usuario de aplicación con permisos de lectura/escritura (idempotente)
+try {
+  const u = db.getUser('million');
+  if (!u) {
+    db.createUser({
+      user: 'million',
+      pwd: 'millionpw',
+      roles: [{ role: 'readWrite', db: 'million' }]
+    });
+    print('Created user million');
+  } else {
+    print('User million already exists, skipping user creation');
+  }
+} catch (e) {
+  print('User creation skipped/error:', e.message);
+}
+
+// ----- Owners -----
+if (db.owners.countDocuments() === 0) {
+  const owners = [
+    { _id: ObjectId(), name: 'John Reed', address: 'Miami, FL', photo: 'https://picsum.photos/id/1005/200/200', birthday: ISODate('1980-04-23T00:00:00Z') },
+    { _id: ObjectId(), name: 'Laura Smith', address: 'Miami Beach, FL', photo: 'https://picsum.photos/id/1011/200/200', birthday: ISODate('1985-11-10T00:00:00Z') },
+    { _id: ObjectId(), name: 'Pedro Alvarez', address: 'Key Biscayne, FL', photo: 'https://picsum.photos/id/1012/200/200', birthday: ISODate('1978-07-02T00:00:00Z') },
+    { _id: ObjectId(), name: 'Mia Chen', address: 'Coral Gables, FL', photo: 'https://picsum.photos/id/1014/200/200', birthday: ISODate('1990-02-18T00:00:00Z') }
+  ];
+  db.owners.insertMany(owners);
+  print('Inserted owners seed');
+} else {
+  print('Owners already seeded, skipping');
+}
+
+
+// Imágenes reales del CDN (MLS) para pruebas
+const CDN_IMAGES = [
+  "https://cdn.millionluxury.com/image-resizing?image=https://azfd-prod.millionluxury.com/mls/418904871_11.jpg",
+  "https://cdn.millionluxury.com/image-resizing?image=https://azfd-prod.millionluxury.com/mls/418904871_12.jpg",
+  "https://cdn.millionluxury.com/image-resizing?image=https://azfd-prod.millionluxury.com/mls/418904871_13.jpg",
+  "https://cdn.millionluxury.com/image-resizing?image=https://azfd-prod.millionluxury.com/mls/418904871_14.jpg",
+  "https://cdn.millionluxury.com/image-resizing?image=https://azfd-prod.millionluxury.com/mls/418904871_15.jpg"
+];
+
+function getCdnImages() {
+  // Devuelve el array de imágenes en el formato esperado por el modelo
+  return CDN_IMAGES.map(url => ({ url, enabled: true }));
+}
+
+// ----- Properties -----
+if (db.properties.countDocuments() === 0) {
+  // necesitamos los owners insertados; si no existen, leerlos de la colección
+  const ownersColl = db.owners.find().toArray();
+  if (ownersColl.length < 4) {
+    print('Owners not found as expected, skipping properties seed');
+  } else {
+    const props = [
+      {
+        _id: ObjectId(),
+        name: 'Coral Gables Villa',
+        address: 'Coral Gables, FL',
+        price: 7800000,
+        codeInternal: 'CG-001',
+        year: 2021,
+        idOwner: ownersColl[3]._id,
+        images: getCdnImages(),
+        description: 'Una exquisita villa de lujo ubicada en el corazón de Coral Gables, diseñada para el entretenimiento y la vida familiar. Esta residencia cuenta con cinco amplias habitaciones y seis baños completos, ofreciendo un espacio sin igual. El interior se distingue por una cocina gourmet de chef, equipada con electrodomésticos de alta gama y encimeras de mármol. Adicionalmente, incluye una sala de cine privada para noches de película y un sistema de domótica de última generación que controla la iluminación, el sonido y la seguridad. En el exterior, un oasis de paz espera con una espectacular piscina de agua salada, un jardín meticulosamente cuidado y una zona de barbacoa perfecta para reuniones. La propiedad dispone de tres plazas de estacionamiento y garantiza una conectividad fluida con wifi de alta velocidad, ideal para teletrabajo y ocio.',
+        beds: 5,
+        fullBaths: 6,
+        halfBaths: 1,
+        parking: 3,
+        areaSqFt: 6500,
+        amenities: ['Piscina', 'Cocina gourmet', 'Sala de cine', 'Wifi', 'Domótica', 'Jardín privado', 'Zona BBQ'],
+        wifi: true
+      },
+      {
+        _id: ObjectId(),
+        name: 'Ocean View Penthouse',
+        address: 'Collins Ave, Miami Beach, FL',
+        price: 24500000,
+        codeInternal: 'MB-002',
+        year: 2020,
+        idOwner: ownersColl[1]._id,
+        images: getCdnImages(),
+        description: 'Experimenta la vida en la cima del lujo con este impresionante penthouse frente al mar en Collins Avenue. Con vistas panorámicas de 360 grados sobre el Océano Atlántico y el skyline de Miami, este hogar es una obra de arte moderna. La propiedad ofrece cuatro habitaciones y cinco baños, cada uno con acabados de diseño. Una de sus joyas es la espaciosa terraza privada, equipada con un jacuzzi y un bar, perfecta para disfrutar de atardeceres inolvidables. Los residentes tienen acceso exclusivo a un gimnasio de última generación, seguridad 24/7 y acceso directo a la playa de arena blanca, permitiendo un estilo de vida de resort. Un lugar donde la exclusividad y el confort se fusionan.',
+        beds: 4,
+        fullBaths: 5,
+        halfBaths: 1,
+        parking: 2,
+        areaSqFt: 5200,
+        amenities: ['Jacuzzi', 'Gimnasio', 'Terraza', 'Acceso playa', 'Wifi', 'Seguridad 24h'],
+        wifi: true
+      },
+      {
+        _id: ObjectId(),
+        name: 'Bay Harbor Mansion',
+        address: '5940 Bay Rd, Miami Beach, FL',
+        price: 169000000,
+        codeInternal: 'BH-003',
+        year: 2019,
+        idOwner: ownersColl[1]._id,
+        images: getCdnImages(),
+        description: 'Esta majestuosa mansión en Bay Harbor es el epítome de la opulencia y la privacidad. Situada directamente frente a la bahía, ofrece un muelle privado ideal para yates y embarcaciones. Con ocho habitaciones y diez baños, la mansión se extiende sobre 18,000 pies cuadrados de espacio habitable, incluyendo un spa privado con sauna y sala de vapor, una cancha de tenis profesional, y una sala de juegos de gran tamaño. La seguridad es de primera categoría, con un sistema de vigilancia de última generación. El exterior es un paraíso de jardines, fuentes y amplias terrazas, perfectas para eventos a gran escala. Con seis espacios de estacionamiento, esta propiedad está pensada para quienes buscan el máximo lujo y exclusividad en una de las zonas más codiciadas de Miami Beach.',
+        beds: 8,
+        fullBaths: 10,
+        halfBaths: 2,
+        parking: 6,
+        areaSqFt: 18000,
+        amenities: ['Muelle privado', 'Spa', 'Cancha de tenis', 'Seguridad', 'Wifi', 'Sala de juegos'],
+        wifi: true
+      },
+      {
+        _id: ObjectId(),
+        name: 'Coconut Grove Retreat',
+        address: 'Coconut Grove, FL',
+        price: 5200000,
+        codeInternal: 'CG-004',
+        year: 2018,
+        idOwner: ownersColl[0]._id,
+        images: getCdnImages(),
+        description: 'Un retiro moderno y sereno en el pintoresco Coconut Grove. Esta casa de diseño minimalista ofrece un oasis de tranquilidad con tres habitaciones y cuatro baños, destacando por su integración perfecta con la naturaleza circundante. El amplio jardín tropical es el centro de la propiedad, ofreciendo un escape de la vida urbana. La piscina climatizada es ideal para nadar durante todo el año, mientras que la zona de trabajo independiente está diseñada para la máxima productividad. Con dos plazas de estacionamiento y un ambiente totalmente pet-friendly, esta residencia es perfecta para aquellos que buscan un estilo de vida relajado y cómodo, sin sacrificar la cercanía a las comodidades de la ciudad.',
+        beds: 3,
+        fullBaths: 4,
+        halfBaths: 1,
+        parking: 2,
+        areaSqFt: 3400,
+        amenities: ['Piscina climatizada', 'Jardín', 'Zona de trabajo', 'Wifi', 'Pet friendly'],
+        wifi: true
+      },
+      {
+        _id: ObjectId(),
+        name: 'Sunny Isles Skyhome',
+        address: 'Sunny Isles Beach, FL',
+        price: 13800000,
+        codeInternal: 'SI-005',
+        year: 2022,
+        idOwner: ownersColl[2]._id,
+        images: getCdnImages(),
+        description: 'Eleva tu estilo de vida en este espectacular skyhome de lujo en Sunny Isles Beach. Ubicado en uno de los pisos más altos, este hogar redefine la vida vertical con ventanales de piso a techo que ofrecen vistas inigualables del océano y la bahía. La propiedad dispone de cuatro habitaciones y cinco baños, diseñados con los más altos estándares de calidad. La principal característica de este edificio es su impresionante piscina infinita, que parece fusionarse con el horizonte. Los residentes disfrutan de un club privado con servicios de concierge, spa y gimnasio de vanguardia. La conveniencia de tres plazas de estacionamiento y el acceso a un servicio de sauna complementan esta experiencia de lujo sin parangón.',
+        beds: 4,
+        fullBaths: 5,
+        halfBaths: 1,
+        parking: 3,
+        areaSqFt: 4800,
+        amenities: ['Piscina infinita', 'Club privado', 'Ventanales', 'Wifi', 'Sauna'],
+        wifi: true
+      },
+      {
+        _id: ObjectId(),
+        name: 'Brickell City Loft',
+        address: 'Brickell, Miami, FL',
+        price: 1100000,
+        codeInternal: 'BR-006',
+        year: 2017,
+        idOwner: ownersColl[3]._id,
+        images: getCdnImages(),
+        description: 'Un loft moderno y chic en el vibrante corazón de Brickell, ideal para el urbanita que busca dinamismo y estilo. Este espacio de dos habitaciones y dos baños completos cuenta con una cocina italiana de diseño, perfecta para quienes disfrutan de la gastronomía. El edificio ofrece acceso exclusivo a un rooftop con piscina, un lugar ideal para relajarse y socializar mientras se contempla la ciudad. La ubicación privilegiada garantiza que las mejores tiendas, restaurantes y locales de ocio de Miami estén a pocos pasos. Con una plaza de estacionamiento incluida, este loft es el punto de partida perfecto para explorar la energía de Brickell y vivir una experiencia urbana inigualable.',
+        beds: 2,
+        fullBaths: 2,
+        halfBaths: 0,
+        parking: 1,
+        areaSqFt: 1200,
+        amenities: ['Rooftop', 'Piscina', 'Cocina italiana', 'Wifi', 'Coworking'],
+        wifi: true
+      },
+      {
+        _id: ObjectId(),
+        name: 'Key Biscayne Estate',
+        address: 'Key Biscayne, FL',
+        price: 35000000,
+        codeInternal: 'KB-007',
+        year: 2016,
+        idOwner: ownersColl[2]._id,
+        images: getCdnImages(),
+        description: 'Una exclusiva residencia familiar en la prestigiosa isla de Key Biscayne, que ofrece una combinación perfecta de privacidad y acceso a la playa. Esta finca de seis habitaciones y siete baños completos está rodeada de exuberante vegetación tropical, proporcionando un ambiente de tranquilidad. Las amenidades de la propiedad incluyen una cancha de pádel privada para los entusiastas del deporte, una gran piscina para disfrutar del sol de Florida, y un bar exterior ideal para recibir a invitados. Además, cuenta con acceso privado a la playa y cuatro plazas de estacionamiento. Es una propiedad diseñada para la vida familiar y el entretenimiento, en una de las zonas más seguras y lujosas de Miami.',
+        beds: 6,
+        fullBaths: 7,
+        halfBaths: 1,
+        parking: 4,
+        areaSqFt: 9000,
+        amenities: ['Cancha paddle', 'Piscina', 'Acceso playa', 'Wifi', 'Bar'],
+        wifi: true
+      },
+      {
+        _id: ObjectId(),
+        name: 'Bal Harbour Residence',
+        address: 'Bal Harbour, FL',
+        price: 8400000,
+        codeInternal: 'BH-008',
+        year: 2021,
+        idOwner: ownersColl[1]._id,
+        images: getCdnImages(),
+        description: 'Esta residencia moderna en Bal Harbour es un santuario de elegancia y confort. Con cinco habitaciones y seis baños, la casa ha sido meticulosamente diseñada para maximizar el espacio y la luz natural. El interior fluye hacia una terraza exterior, donde se puede disfrutar de una vista inigualable del océano. El spa privado y el gimnasio en casa garantizan el bienestar físico y mental. Con dos espacios de estacionamiento, esta residencia es el lugar ideal para quienes valoran la sofisticación y el acceso a las exclusivas boutiques y restaurantes de Bal Harbour. Un hogar que combina la funcionalidad con la estética de vanguardia.',
+        beds: 5,
+        fullBaths: 6,
+        halfBaths: 1,
+        parking: 2,
+        areaSqFt: 5000,
+        amenities: ['Spa', 'Gimnasio', 'Terraza', 'Wifi', 'Vista mar'],
+        wifi: true
+      },
+      {
+        _id: ObjectId(),
+        name: 'Fisher Island Condo',
+        address: 'Fisher Island, FL',
+        price: 18500000,
+        codeInternal: 'FI-009',
+        year: 2019,
+        idOwner: ownersColl[0]._id,
+        images: getCdnImages(),
+        description: 'Un exclusivo condominio en la inigualable Fisher Island, accesible solo por ferry privado, ofreciendo la máxima privacidad y lujo. Esta propiedad de tres habitaciones y cuatro baños está pensada para el propietario más exigente. El edificio cuenta con acceso a una marina privada, ideal para los amantes de los barcos, y a un exclusivo club social con piscina, canchas de tenis y restaurantes. El condominio cuenta con un diseño de interiores elegante y funcional, garantizando un ambiente de tranquilidad. Con dos plazas de estacionamiento, esta residencia es un reflejo de un estilo de vida privilegiado y sofisticado, en un paraíso tropical privado.',
+        beds: 3,
+        fullBaths: 4,
+        halfBaths: 1,
+        parking: 2,
+        areaSqFt: 3200,
+        amenities: ['Marina', 'Club social', 'Wifi', 'Pet friendly', 'Gimnasio'],
+        wifi: true
+      },
+      {
+        _id: ObjectId(),
+        name: 'Midtown Modern House',
+        address: 'Midtown Miami, FL',
+        price: 2400000,
+        codeInternal: 'MM-010',
+        year: 2020,
+        idOwner: ownersColl[3]._id,
+        images: getCdnImages(),
+        description: 'Una joya de la arquitectura moderna en el corazón de Midtown, este hogar es un refugio de diseño y calma en medio de la energía de la ciudad. La casa de cuatro habitaciones y cuatro baños completos cuenta con un tranquilo jardín zen, un espacio para la meditación y el sosiego. La cocina, totalmente equipada, es un sueño para cualquier entusiasta culinario. El hogar está optimizado para el teletrabajo con espacios de coworking y wifi de alta velocidad. Con dos plazas de estacionamiento, esta propiedad es perfecta para quienes buscan una vida urbana activa pero con la paz y la privacidad de un hogar bien diseñado.',
+        beds: 4,
+        fullBaths: 4,
+        halfBaths: 1,
+        parking: 2,
+        areaSqFt: 2800,
+        amenities: ['Jardín zen', 'Cocina equipada', 'Wifi', 'Coworking', 'Pet friendly'],
+        wifi: true
+      },
+      {
+        _id: ObjectId(),
+        name: 'South Beach Bungalow',
+        address: 'South Beach, Miami, FL',
+        price: 3200000,
+        codeInternal: 'SB-011',
+        year: 2015,
+        idOwner: ownersColl[1]._id,
+        images: getCdnImages(),
+        description: 'Un exclusivo bungalow en South Beach que ofrece una experiencia única, a pocos pasos del mar y del icónico ambiente Art Deco. Con dos habitaciones y tres baños, esta propiedad es un escape íntimo y privado en uno de los barrios más animados de Miami. La terraza privada es perfecta para cenas al aire libre y para disfrutar del clima tropical. Los residentes tienen acceso a una piscina, ideal para un baño refrescante después de un día de playa. La propiedad es totalmente pet-friendly y es la base perfecta para quienes desean disfrutar de la vida nocturna, la cultura y la playa sin renunciar a la tranquilidad de un hogar propio.',
+        beds: 2,
+        fullBaths: 3,
+        halfBaths: 1,
+        parking: 1,
+        areaSqFt: 1500,
+        amenities: ['Terraza', 'Piscina', 'Wifi', 'Pet friendly'],
+        wifi: true
+      },
+      {
+        _id: ObjectId(),
+        name: 'Venetian Islands Villa',
+        address: 'Venetian Islands, Miami, FL',
+        price: 42000000,
+        codeInternal: 'VI-012',
+        year: 2018,
+        idOwner: ownersColl[2]._id,
+        images: getCdnImages(),
+        description: 'Una villa de ensueño en las exclusivas Venetian Islands, que redefine el lujo frente al agua. Esta residencia de siete habitaciones y ocho baños está meticulosamente diseñada para ofrecer la máxima comodidad y elegancia. Cuenta con su propio muelle privado, perfecto para embarcaciones de gran calado, y una impresionante piscina infinita que se funde con las aguas de la bahía. El hogar también dispone de una sala de cine de última generación y de amplios jardines que ofrecen un oasis de serenidad. Con cinco plazas de estacionamiento, esta propiedad es el lugar ideal para un estilo de vida de élite, donde la belleza natural se combina con el diseño más sofisticado.',
+        beds: 7,
+        fullBaths: 8,
+        halfBaths: 2,
+        parking: 5,
+        areaSqFt: 12000,
+        amenities: ['Muelle privado', 'Piscina infinita', 'Sala de cine', 'Wifi', 'Jardín'],
+        wifi: true
+      }
+    ];
+    db.properties.insertMany(props);
+    print('Inserted properties seed with image URLs');
+  }
+} else {
+  print('Properties already seeded, skipping');
+}
+
+// Índices para búsquedas y filtros
+db.properties.createIndex({ name: 'text', address: 'text' });
+db.properties.createIndex({ price: 1 });
+db.properties.createIndex({ idOwner: 1 });
+print('Indexes ensured');
