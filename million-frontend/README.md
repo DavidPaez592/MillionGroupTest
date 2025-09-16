@@ -77,4 +77,7 @@ Para más información sobre Next.js, consulta:
 ## Despliegue
 
 La forma más sencilla de desplegar esta aplicación es usando [Vercel](https://vercel.com). Consulta la [documentación de despliegue](https://nextjs.org/docs/app/building-your-application/deploying) para más detalles.
+
+```
+
 ```

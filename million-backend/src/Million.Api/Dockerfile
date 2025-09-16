@@ -1,9 +1,9 @@
-# Multi-stage Dockerfile for Million.Api (.NET 9)
+# Dockerfile for Million.Api (.NET 9)
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-WORKDIR /src
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS base
+WORKDIR /app
 
-# Copy solution and project files first to leverage Docker layer caching
+# Copy solution and project files
 COPY Million.sln ./
 COPY src/Million.Domain/Million.Domain.csproj src/Million.Domain/
 COPY src/Million.Application/Million.Application.csproj src/Million.Application/
@@ -16,11 +16,12 @@ RUN dotnet restore Million.sln
 # Copy the rest of the source
 COPY . .
 
-RUN dotnet publish src/Million.Api/Million.Api.csproj -c Release -o /app/publish /p:UseAppHost=false
+# Set the working directory to the API project
+WORKDIR /app/src/Million.Api
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
-WORKDIR /app
+# Expose the application port
 ENV ASPNETCORE_URLS=http://0.0.0.0:8080
 EXPOSE 8080
-COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "Million.Api.dll"]
+
+# Run the application
+CMD ["dotnet", "run", "--no-launch-profile", "--urls", "http://0.0.0.0:8080"]

@@ -25,7 +25,10 @@ export type PropertyFilters = {
   pageSize?: string | number;
 };
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:5084";
+const API_BASE =
+  typeof window === "undefined"
+    ? "http://million-backend:8080" // Dentro del contenedor de Docker
+    : "http://localhost:5084"; // Desde el navegador
 
 export async function fetchProperties(
   filters: PropertyFilters,
@@ -34,6 +37,8 @@ export async function fetchProperties(
   Object.entries(filters).forEach(([k, v]) => {
     if (v !== undefined && v !== null && String(v).length > 0) url.searchParams.set(k, String(v));
   });
+
+  console.log("Fetching from URL:", url.toString()); // Added for debugging
 
   const res = await fetch(url.toString(), { cache: "no-store" });
   if (!res.ok) throw new Error(`API error ${res.status}`);

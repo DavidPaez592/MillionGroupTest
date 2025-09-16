@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: million-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+    volumes:
+      - ./million-backend/mongo-data:/data/db
+      - ./million-backend/seed:/docker-entrypoint-initdb.d
+
+  backend:
+    build:
+      context: ./million-backend
+      dockerfile: ./src/Million.Api/Dockerfile
+    container_name: million-backend
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Mongo__ConnectionString=mongodb://root:example@mongo:27017/?authSource=admin
+      - Mongo__Database=million
+    ports:
+      - "5084:8080"
+    depends_on:
+      - mongo
+
+  frontend:
+    build:
+      context: ./million-frontend
+    volumes:
+      - ./million-frontend:/app
+    command: >
+      sh -c "cp -n .env.example .env.local && npm run dev"
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:
+    driver: local

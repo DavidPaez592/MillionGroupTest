@@ -5,12 +5,29 @@
 Antes de comenzar, asegúrate de tener instalados los siguientes programas en tu sistema:
 
 - **Docker**: Tener Docker Desktop instalado y abierto para manejar los contenedores de la base de datos y otros servicios.
-- **.NET SDK**: Para ejecutar el backend.
-- **Node.js**: Node.js 24.4 y npm 11.4 para ejecutar el frontend.
 
 ---
 
-## Pasos para Levantar el Proyecto
+## Levantar el Proyecto con Docker
+
+El proyecto está completamente dockerizado. Puedes levantar todos los servicios (frontend, backend y base de datos) con un solo comando, siempre y cuando estes en la ruta correcta donde se ubiquen million-backedn y frontend , donde este el docker-compose y corregir las variables de entorno, se dejo un archivo .env.example. :
+
+```bash
+docker-compose up -d
+```
+
+Esto iniciará los contenedores necesarios y el proyecto estará disponible en:
+- **Frontend**: [http://localhost:3000](http://localhost:3000)
+- **Backend**: [http://localhost:5084](http://localhost:5084)
+
+Si encuentras problemas, revisa los logs:
+```bash
+docker-compose logs
+```
+
+---
+
+## Pasos Manuales (en caso de fallos)
 
 ### 1. Levantar los Servicios con Docker
 
