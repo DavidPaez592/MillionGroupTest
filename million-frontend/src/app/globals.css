@@ -31,18 +31,35 @@
 }
 
 /* Muted paragraph tone that adapts to theme */
-.muted { color: #4b5563; }
-[data-theme="black"] .muted { color: #d1d5db; }
+.muted {
+  color: #4b5563;
+}
+[data-theme="black"] .muted {
+  color: #d1d5db;
+}
 
-body { background: var(--background); color: var(--foreground); }
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
 
 /* Themed buttons */
-.ml-btn-primary { @apply h-10 rounded-md px-4 text-sm font-semibold cursor-pointer; }
-.ml-btn-clear { @apply h-10 rounded-md px-4 text-sm cursor-pointer; }
+.ml-btn-primary {
+  @apply h-10 rounded-md px-4 text-sm font-semibold cursor-pointer;
+}
+.ml-btn-clear {
+  @apply h-10 rounded-md px-4 text-sm cursor-pointer;
+}
 
 /* Light theme defaults */
-:root .ml-btn-primary { background: #0f172a; color: #fff; }
-:root .ml-btn-clear { background: #f4f4f5; color: #111827; }
+:root .ml-btn-primary {
+  background: #0f172a;
+  color: #fff;
+}
+:root .ml-btn-clear {
+  background: #f4f4f5;
+  color: #111827;
+}
 
 /* Black theme overrides */
 [data-theme="black"] .ml-btn-primary {
@@ -51,7 +68,11 @@ body { background: var(--background); color: var(--foreground); }
   border: 1.5px solid #ffffff !important;
   box-shadow: 0 2px 8px 0 #0002;
 }
-[data-theme="black"] .ml-btn-clear { background: #979AA1; color: #fff; border: 1px solid #8b8e95; }
+[data-theme="black"] .ml-btn-clear {
+  background: #979aa1;
+  color: #fff;
+  border: 1px solid #8b8e95;
+}
 
 /* Pagination active button in black theme */
 [data-theme="black"] .ml-pagination-active {

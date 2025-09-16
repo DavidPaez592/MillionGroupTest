@@ -13,7 +13,12 @@ interface PropertyCarouselProps {
   fullHeight?: boolean;
 }
 
-export default function PropertyCarousel({ images, alt, autoplay, fullHeight }: PropertyCarouselProps) {
+export default function PropertyCarousel({
+  images,
+  alt,
+  autoplay,
+  fullHeight,
+}: PropertyCarouselProps) {
   const [idx, setIdx] = useState(0);
   // Autoplay only if prop is true and more than 1 image
   useEffect(() => {
@@ -26,7 +31,7 @@ export default function PropertyCarousel({ images, alt, autoplay, fullHeight }: 
   if (!images || images.length === 0) return null;
   const go = (d: number) => setIdx((prev) => (prev + d + images.length) % images.length);
   return (
-    <div className={`relative ${fullHeight ? 'h-full' : 'h-56'} bg-zinc-100 select-none group`}>
+    <div className={`relative ${fullHeight ? "h-full" : "h-56"} bg-zinc-100 select-none group`}>
       <AnimatePresence initial={false}>
         <motion.div
           key={idx}
@@ -53,7 +58,11 @@ export default function PropertyCarousel({ images, alt, autoplay, fullHeight }: 
       {/* Arrows: siempre visibles en mobile, hover en desktop */}
       <button
         aria-label="Prev"
-        onClick={(e) => { e.preventDefault(); e.stopPropagation(); go(-1); }}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          go(-1);
+        }}
         className={btnPremium + " left-2 arrow-carousel"}
         style={{}}
       >
@@ -61,7 +70,11 @@ export default function PropertyCarousel({ images, alt, autoplay, fullHeight }: 
       </button>
       <button
         aria-label="Next"
-        onClick={(e) => { e.preventDefault(); e.stopPropagation(); go(1); }}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          go(1);
+        }}
         className={btnPremium + " right-2 arrow-carousel"}
         style={{}}
       >
@@ -89,7 +102,10 @@ export default function PropertyCarousel({ images, alt, autoplay, fullHeight }: 
       {/* Dots: ocultar en mobile, mostrar en md+ */}
       <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1 hidden md:flex">
         {images.slice(0, 8).map((_, i) => (
-          <span key={i} className={`h-1.5 w-1.5 rounded-full ${i === idx ? "bg-white" : "bg-white/60"}`} />
+          <span
+            key={i}
+            className={`h-1.5 w-1.5 rounded-full ${i === idx ? "bg-white" : "bg-white/60"}`}
+          />
         ))}
       </div>
     </div>

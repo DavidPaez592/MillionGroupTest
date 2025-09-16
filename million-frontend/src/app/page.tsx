@@ -6,7 +6,11 @@ import FeaturedProperty from "@/components/FeaturedProperty";
 import { fetchProperties } from "@/lib/api";
 import { Suspense } from "react";
 
-export default async function Home({ searchParams }: { searchParams?: Promise<Record<string, string | string[] | undefined>> }) {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const params = (await searchParams) ?? {};
   // Obtener la propiedad más cara GLOBAL (sin filtros)
   const featuredResult = await fetchProperties({ sort: "priceDesc", page: 1, pageSize: 1 });
@@ -16,7 +20,12 @@ export default async function Home({ searchParams }: { searchParams?: Promise<Re
       {/* Propiedad destacada */}
       <FeaturedProperty property={featured} />
       <header className="space-y-3">
-        <h1 className="text-4xl md:text-5xl" style={{ fontFamily: 'var(--font-saira), sans-serif', fontWeight: 400 }}>Explora propiedades de lujo</h1>
+        <h1
+          className="text-4xl md:text-5xl"
+          style={{ fontFamily: "var(--font-saira), sans-serif", fontWeight: 400 }}
+        >
+          Explora propiedades de lujo
+        </h1>
         <p className="text-zinc-600 muted">Filtra por nombre, dirección y rango de precio.</p>
         <div className="flex items-center gap-3 justify-between flex-wrap">
           <Filters />

@@ -2,7 +2,11 @@ import PropertyCard from "@/components/PropertyCard";
 import Pagination from "@/components/Pagination";
 import { fetchProperties } from "@/lib/api";
 
-export default async function Results({ params }: { params: Record<string, string | string[] | undefined> }) {
+export default async function Results({
+  params,
+}: {
+  params: Record<string, string | string[] | undefined>;
+}) {
   const result = await fetchProperties({
     name: s(params.name),
     address: s(params.address),
@@ -32,5 +36,7 @@ export default async function Results({ params }: { params: Record<string, strin
 }
 
 function s(v: string | string[] | undefined): string | undefined {
-  if (!v) return undefined; if (Array.isArray(v)) return v[0]; return v;
+  if (!v) return undefined;
+  if (Array.isArray(v)) return v[0];
+  return v;
 }

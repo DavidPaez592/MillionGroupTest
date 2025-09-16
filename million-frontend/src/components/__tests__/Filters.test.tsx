@@ -1,21 +1,21 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import Filters from '../Filters';
+import React from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
+import Filters from "../Filters";
 
-jest.mock('next/navigation', () => ({
+jest.mock("next/navigation", () => ({
   useRouter: jest.fn(() => ({
     push: jest.fn(),
   })),
   useSearchParams: jest.fn(() => new URLSearchParams()),
 }));
 
-test('muestra un mensaje de error si los campos requeridos están vacíos', () => {
+test("muestra un mensaje de error si los campos requeridos están vacíos", () => {
   render(<Filters />);
 
-  const formElement = screen.getByRole('form', { name: /filtros/i });
+  const formElement = screen.getByRole("form", { name: /filtros/i });
   fireEvent.submit(formElement);
 
-  const errorMessage = screen.getByTestId('error-message');
+  const errorMessage = screen.getByTestId("error-message");
   expect(errorMessage).toBeInTheDocument();
-  expect(errorMessage).toHaveTextContent('Por favor complete los campos requeridos');
+  expect(errorMessage).toHaveTextContent("Por favor complete los campos requeridos");
 });

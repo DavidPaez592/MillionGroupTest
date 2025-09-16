@@ -12,6 +12,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function RandomDateLabel() {
   const [label] = useState(() => {
@@ -49,7 +50,6 @@ export default function Page() {
   const { id } = useParams<{ id: string }>();
   const [property, setProperty] = useState<Property | null>(null);
   const [mainIdx, setMainIdx] = useState(0);
-  const [fade, setFade] = useState(false);
   const [showFullDesc, setShowFullDesc] = useState(false);
   const [success, setSuccess] = useState(false);
   const descRef = useRef<HTMLParagraphElement>(null);
@@ -64,14 +64,12 @@ export default function Page() {
     return arr.length ? Array.from(new Set(arr)) : ["/no-image.jpg"];
   }, [property?.images]);
 
-  // Cuando mainIdx cambia, dispara el fade
-  useEffect(() => {
-    setFade(true);
-    const timeout = setTimeout(() => setFade(false), 350);
-    return () => clearTimeout(timeout);
-  }, [mainIdx]);
-
-  if (!property) return <div className="p-8 text-center text-zinc-400">Cargando...</div>;
+  if (!property)
+    return (
+      <div className="p-8 text-center text-zinc-400">
+        <CircularProgress />
+      </div>
+    );
 
   // Miniaturas: siempre las 4 siguientes a la principal original (no se reordenan al navegar)
   const thumbs: (string | null)[] = [];

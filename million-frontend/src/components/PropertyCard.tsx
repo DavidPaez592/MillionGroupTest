@@ -7,10 +7,10 @@ import React from "react";
 export default function PropertyCard({ p }: { p: PropertyListItem }) {
   // Fecha aleatoria entre 1 de agosto y 15 de septiembre 2025
   function randomDate() {
-    const start = new Date('2025-08-01').getTime();
-    const end = new Date('2025-09-15').getTime();
+    const start = new Date("2025-08-01").getTime();
+    const end = new Date("2025-09-15").getTime();
     const d = new Date(start + Math.random() * (end - start));
-    const now = new Date('2025-09-15');
+    const now = new Date("2025-09-15");
     const diff = Math.floor((now.getTime() - d.getTime()) / (1000 * 60 * 60 * 24));
     return `${diff} días ago`;
   }
@@ -23,13 +23,7 @@ export default function PropertyCard({ p }: { p: PropertyListItem }) {
         <PropertyCarousel images={p.images} alt={p.name} />
       ) : (
         <div className="relative h-56 bg-zinc-100">
-          <Image
-            src="/no-image.jpg"
-            alt={p.name}
-            fill
-            className="object-cover"
-            unoptimized
-          />
+          <Image src="/no-image.jpg" alt={p.name} fill className="object-cover" unoptimized />
         </div>
       )}
       <div className="p-4">
@@ -39,9 +33,7 @@ export default function PropertyCard({ p }: { p: PropertyListItem }) {
           <span className="mx-2 text-zinc-300">|</span>
           <span>{randomDate()}</span>
         </div>
-        <h3 className="font-semibold text-zinc-900">
-          {p.name}
-        </h3>
+        <h3 className="font-semibold text-zinc-900">{p.name}</h3>
         <p className="text-zinc-500 text-sm">{p.address}</p>
         <p className="mt-2 text-xl font-semibold text-zinc-900">
           {formatPrice(p.price)}
@@ -53,5 +45,9 @@ export default function PropertyCard({ p }: { p: PropertyListItem }) {
 }
 
 function formatPrice(v: number) {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(v);
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(v);
 }

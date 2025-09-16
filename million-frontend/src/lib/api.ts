@@ -27,7 +27,9 @@ export type PropertyFilters = {
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:5084";
 
-export async function fetchProperties(filters: PropertyFilters): Promise<PagedResult<PropertyListItem>> {
+export async function fetchProperties(
+  filters: PropertyFilters,
+): Promise<PagedResult<PropertyListItem>> {
   const url = new URL("/api/properties", API_BASE);
   Object.entries(filters).forEach(([k, v]) => {
     if (v !== undefined && v !== null && String(v).length > 0) url.searchParams.set(k, String(v));
