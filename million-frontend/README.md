@@ -60,7 +60,7 @@ npm run format
 Ejecuta las pruebas unitarias con Jest:
 
 ```bash
-npm run test
+npm run jest
 ```
 
 ## Notas de imágenes
