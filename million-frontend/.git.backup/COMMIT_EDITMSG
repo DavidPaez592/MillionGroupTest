@@ -1,0 +1,21 @@
+feat: Add FeaturedProperty component with amenities display and image carousel
+
+feat: Implement Filters component for property search with query parameters
+
+feat: Create Footer component with contact information and social links
+
+feat: Add Logo component for branding in the header
+
+feat: Implement Pagination component for navigating property listings
+
+feat: Create PropertyCard component to display individual property details
+
+feat: Add PropertyCarousel component for image slideshow functionality
+
+feat: Implement SkeletonCard component for loading states in property listings
+
+feat: Create SortSelect component for sorting property listings
+
+feat: Add ThemeToggle component for switching between light and dark themes
+
+feat: Define API types and functions for fetching properties and details
