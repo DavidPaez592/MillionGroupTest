@@ -9,9 +9,14 @@ namespace Million.Application.Services;
 /// Application service that orchestrates property queries and maps domain entities
 /// into lightweight DTOs required by the API and UI.
 /// </summary>
-public sealed class PropertyService(IPropertyRepository repository) : IPropertyService
+public sealed class PropertyService : IPropertyService
 {
-    private readonly IPropertyRepository _repository = repository;
+    private readonly IPropertyRepository _repository;
+
+    public PropertyService(IPropertyRepository repository)
+    {
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+    }
 
     public async Task<PagedResult<PropertyListItemDto>> GetAsync(PropertyQuery query, CancellationToken ct = default)
     {
@@ -79,6 +84,6 @@ public sealed class PropertyService(IPropertyRepository repository) : IPropertyS
         HalfBaths = p.HalfBaths,
         AreaSqFt = p.AreaSqFt,
     DateListed = p.DateListed,
-    Amenities = p.Amenities
+    Amenities = p.Amenities ?? new List<string>() // Maneja null en Amenities
     };
 }

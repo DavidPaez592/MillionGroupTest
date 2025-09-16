@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { PropertyListItem } from "@/lib/api";
 import PropertyCarousel from "@/components/PropertyCarousel";
 import Image from "next/image";
+import React from "react";
 
 export default function PropertyCard({ p }: { p: PropertyListItem }) {
   // Fecha aleatoria entre 1 de agosto y 15 de septiembre 2025

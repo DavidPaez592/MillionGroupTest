@@ -1,10 +1,13 @@
 import Link from "next/link";
+import React from "react";
 
 export default function Logo() {
   return (
     <Link aria-label="home" href="/" className="inline-block">
       <div
         className="ml-logo"
+        role="img"
+        aria-label="logo"
         style={{
           width: 132,
           height: 40,

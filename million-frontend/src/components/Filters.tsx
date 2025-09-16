@@ -1,6 +1,6 @@
 "use client";
+import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
 
 export default function Filters() {
   const router = useRouter();
@@ -10,6 +10,7 @@ export default function Filters() {
   const [address, setAddress] = useState(sp.get('address') ?? '');
   const [minPrice, setMinPrice] = useState(sp.get('minPrice') ?? '');
   const [maxPrice, setMaxPrice] = useState(sp.get('maxPrice') ?? '');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     setName(sp.get('name') ?? '');
@@ -21,6 +22,11 @@ export default function Filters() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!name.trim() && !address.trim() && !minPrice.trim() && !maxPrice.trim()) {
+      setError('Por favor complete los campos requeridos');
+      return;
+    }
+    setError('');
     const q = new URLSearchParams();
     if (name.trim()) q.set('name', name.trim());
     if (address.trim()) q.set('address', address.trim());
@@ -49,6 +55,7 @@ export default function Filters() {
       className="filters-form flex flex-wrap gap-3 items-center md:justify-start justify-center md:flex-row flex-col md:items-center w-full"
       aria-label="Filtros"
     >
+      {error && <p className="text-red-500" role="alert" data-testid="error-message">{error}</p>}
       <input
         aria-label="Nombre"
         placeholder="Nombre"

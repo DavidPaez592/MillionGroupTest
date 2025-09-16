@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function Pagination({ total, page, pageSize }: { total: number; page: number; pageSize: number }) {
@@ -20,7 +21,7 @@ export default function Pagination({ total, page, pageSize }: { total: number; p
 
   return (
     <div className="flex flex-col gap-3 mt-4">
-  <div className="text-sm text-zinc-600 ml-results-count">{total.toLocaleString()} resultados</div>
+      <div className="text-sm text-zinc-600 ml-results-count">{total.toLocaleString()} resultados</div>
       <div className="flex items-center gap-2 justify-center">
         <button onClick={() => go(page - 1)} disabled={page <= 1} className={btnCls}>
           ←
