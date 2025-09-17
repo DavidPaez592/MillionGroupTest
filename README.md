@@ -1,5 +1,14 @@
 # Million Group Project
 
+## Enfoque y Buenas Prácticas
+
+Este proyecto fue desarrollado siguiendo principios de **arquitectura limpia**, aplicando **patrones de diseño** y buenas prácticas tanto en frontend como en backend.  
+Se priorizó la mantenibilidad, escalabilidad y claridad del código, utilizando herramientas como **Prettier** y **ESLint** para asegurar un formateo y estilo consistente en todo el repositorio.  
+El código está modularizado, con separación de responsabilidades, manejo adecuado de errores y validaciones.  
+El frontend es completamente **responsive** y el backend sigue principios de desacoplamiento y testabilidad.  
+Además, se incluyeron pruebas unitarias y documentación clara para facilitar la colaboración y el mantenimiento.
+
+
 ## Requisitos Previos
 
 Antes de comenzar, asegúrate de tener instalados los siguientes programas en tu sistema:
@@ -10,7 +19,7 @@ Antes de comenzar, asegúrate de tener instalados los siguientes programas en tu
 
 ## Levantar el Proyecto con Docker
 
-El proyecto está completamente dockerizado. Puedes levantar todos los servicios (frontend, backend y base de datos) con un solo comando, siempre y cuando estes en la ruta correcta donde se ubiquen million-backedn y frontend , donde este el docker-compose y corregir las variables de entorno, se dejo un archivo .env.example. :
+El proyecto está completamente dockerizado y tambien completamente RESPONSIVE para mobile, las pruebas se realizaron teniendo en cuenta este enfoque, Puedes levantar todos los servicios (frontend, backend y base de datos) con un solo comando, siempre y cuando estes en la ruta correcta donde se ubiquen million-backedn y frontend , donde este el docker-compose y corregir las variables de entorno, se dejo un archivo .env.example. :
 
 ```bash
 docker-compose up -d
